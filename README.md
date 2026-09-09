@@ -2,9 +2,9 @@
 
 **Third-party logistics · Detect · Excel**
 
-> A 44-door outbound operation was billing from memory. Shipments left the
-> building, and some of them were never invoiced.
-> The tracker made the gap visible on the day it happened instead of at month end.
+> A 44-door outbound operation was marking shipments complete before they
+> actually were. Retailers found the gaps first, and every one came back
+> as a chargeback.
 
 ![ship log](./screenshots/ship-log-redacted.png)
 
@@ -28,11 +28,12 @@ Outbound status lived in three places at once — a WMS that knew what was
 picked, a set of dock-side paper logs, and whoever happened to be standing at
 the door. None of them agreed by end of shift.
 
-The billing consequence is the part that matters. A shipment that left without
-being reconciled against the outbound record was a shipment nobody invoiced.
-It wasn't theft or gross negligence; it was a reconciliation gap wide enough
-that nothing forced the question until the month closed and the number was
-already wrong.
+The billing consequence is the part that matters. A shipment marked complete
+while part of it still sat elsewhere in the building went out incomplete —
+and the gap surfaced only when the retailer receiving it flagged the shortage
+and issued a chargeback. It wasn't theft or gross negligence; it was a
+reconciliation gap wide enough that nothing forced the question until a
+retailer's chargeback did.
 
 ## What it isn't
 
@@ -67,7 +68,8 @@ seal number, shipped, time out.
 The two columns that did the actual recovery work are `CHECKED Y/N` and
 `DOCK LOCKED?`. Together they encode the only question that matters at the
 door: *has this been reconciled, and is it physically closed out?* A row that
-is loaded but not checked is money leaving the building.
+is loaded but not checked is a shipment that can go out incomplete — and
+come back as a chargeback.
 
 **Conditional formatting as the alerting layer.** Pending states hold yellow,
 unresolved states hold red, and they stay that way. There is no dismiss
@@ -75,7 +77,7 @@ button. An exception that can be cleared by ignoring it will be.
 
 ## Results
 
-- Roughly **$120,000 per month** in previously unbilled outbound identified and recovered.
+- Roughly **$120,000 per month** in retailer chargebacks prevented.
 - Adopted by a **40-person floor team** through design, rollout, training, and handover.
 - Findings and recovery figures reported directly to site leadership.
 
